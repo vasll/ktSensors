@@ -9,23 +9,41 @@ import WinUtils.Powershell.LIBRE_SCRIPT
  */
 class LibreParser {
 
+    enum class SensorParameter(val str: String) {
+        CONTROL("Control"), HARDWARE("Hardware"),
+        IDENTIFIER("Identifier"), INDEX("Index"),
+        IS_DEFAULT_HIDDEN("IsDefaultHidden"), MAX("Max"),
+        MIN("Min"), NAME("Name"), PARAMETERS("Parameters"),
+        SENSOR_TYPE("SensorType"), VALUE("Value"),
+        VALUES("Values"), VALUES_TIME_WINDOW("ValuesTimeWindow")
+    }
+
     companion object {
         fun parse() {
             val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()
 
             for(block in rawOutput.split("\n\n")) {
-                println("============== START OF BLOCK ==============")
-
                 if(!block.contains("HardwareType")){
-                    println(block)
+                    parseSensorBlock(block)
                 }
-
-                println("=============== END OF BLOCK ===============")
             }
         }
 
-        fun getBlockParams(){
+        /**
+         * Returns a Map containing a sensor block's data
+         */
+        private fun parseSensorBlock(block: String): Map<String, String> {
+            val dataMap = mutableMapOf<String, String>()
 
+            var parameterIndex = 0
+            for(line in block.split('\n')){ // For every line in the sensor block
+                dataMap[SensorParameter.values()[parameterIndex].str] = line.split(":", limit = 2)[1].trim()   // Add the corresponding value to the key
+                parameterIndex += 1
+            }
+
+            println(dataMap["SensorType"])
+
+            return mapOf()
         }
     }
 }

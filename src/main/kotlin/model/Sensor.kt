@@ -6,9 +6,9 @@ package model
 data class Sensor(
     val hardware: String,
     val identifier: String,
+    val index: Int,
     val name: String,
     val type: Type,
-    val index: Int,
     val value: Double
 ) {
     enum class Type(val type: String){
