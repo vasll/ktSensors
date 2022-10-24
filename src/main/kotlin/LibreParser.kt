@@ -1,4 +1,5 @@
 import WinUtils.Powershell.LIBRE_SCRIPT
+import model.Sensor
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
@@ -24,15 +25,23 @@ class LibreParser {
 
             for(block in rawOutput.split("\n\n")) {
                 if(!block.contains("HardwareType")){
-                    parseSensorBlock(block)
+                    println(getSensor(block))
                 }
             }
         }
 
+        private fun String.toSensorType(): Sensor.Type? {
+            for(type in Sensor.Type.values())
+                if(type.str == this)
+                    return type
+
+            return null
+        }
+
         /**
-         * Returns a Map containing a sensor block's data
+         * Returns a Sensor from a block of Strings
          */
-        private fun parseSensorBlock(block: String): Map<String, String> {
+        private fun getSensor(block: String): Sensor {
             val dataMap = mutableMapOf<String, String>()
 
             var parameterIndex = 0
@@ -41,9 +50,14 @@ class LibreParser {
                 parameterIndex += 1
             }
 
-            println(dataMap["SensorType"])
-
-            return mapOf()
+            return Sensor(
+                dataMap[SensorParameter.HARDWARE.str],
+                dataMap[SensorParameter.IDENTIFIER.str],
+                dataMap[SensorParameter.INDEX.str]?.toInt(),
+                dataMap[SensorParameter.NAME.str],
+                dataMap[SensorParameter.SENSOR_TYPE.str]?.toSensorType(),
+                dataMap[SensorParameter.VALUE.str]?.toDouble(),
+            )
         }
     }
 }
