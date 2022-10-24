@@ -5,5 +5,5 @@ fun main() {
         println("[WARN] No administrator privileges detected, sensor data will be limited.")
     }
 
-    println(WinUtils.Powershell.runAndGet(LIBRE_SCRIPT))
+    LibreParser.parse()
 }
