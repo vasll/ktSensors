@@ -2,6 +2,9 @@ package model
 
 /**
  * A data class that represents a sensor
+ *
+ * The sensor from LibreHardwareMonitor has other parameters, but I decided to not include them in my implementation
+ * because I find them not useful to this scope
  */
 data class Sensor(
     val hardware: String?,
@@ -18,6 +21,6 @@ data class Sensor(
         CLOCK("Clock"),
         TEMPERATURE("Temperature"),
         CURRENT("Current"),
-        FACTOR("Factor");
+        FACTOR("Factor");   //TODO add storage sensor types (i.e: "Used Space")
     }
 }

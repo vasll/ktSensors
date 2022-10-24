@@ -1,5 +1,7 @@
 import WinUtils.Powershell.LIBRE_SCRIPT
+import model.Component
 import model.Sensor
+import java.util.*
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
@@ -24,10 +26,38 @@ class LibreParser {
             val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()
 
             for(block in rawOutput.split("\n\n")) {
-                if(!block.contains("HardwareType")){
-                    println(getSensor(block))
+                if(block.contains("HardwareType")){ // If the current block is a hardware/component block
+                    //val component = getComponent(block)
+                    //println(component)
+                }else{  // If the current block is a sensor block
+                    val sensor = getSensor(block)
+                    println(sensor)
                 }
             }
+        }
+
+        private fun getComponent(block: String): Component? {
+            return null
+        }
+
+        /**
+         * Returns a Sensor from a block of Strings
+         */
+        private fun getSensor(block: String): Sensor {
+            val lines = block.split('\n').toMutableList()
+
+            for(i in 0 until lines.size){
+                lines[i] = lines[i].split(":", limit = 2)[1].trim()
+            }
+
+            return Sensor(
+                lines[SensorParameter.HARDWARE.ordinal],
+                lines[SensorParameter.IDENTIFIER.ordinal],
+                lines[SensorParameter.INDEX.ordinal].toInt(),
+                lines[SensorParameter.NAME.ordinal],
+                lines[SensorParameter.SENSOR_TYPE.ordinal].toSensorType(),
+                lines[SensorParameter.VALUE.ordinal].toDouble(),
+            )
         }
 
         private fun String.toSensorType(): Sensor.Type? {
@@ -36,28 +66,6 @@ class LibreParser {
                     return type
 
             return null
-        }
-
-        /**
-         * Returns a Sensor from a block of Strings
-         */
-        private fun getSensor(block: String): Sensor {
-            val dataMap = mutableMapOf<String, String>()
-
-            var parameterIndex = 0
-            for(line in block.split('\n')){ // For every line in the sensor block
-                dataMap[SensorParameter.values()[parameterIndex].str] = line.split(":", limit = 2)[1].trim()   // Add the corresponding value to the key
-                parameterIndex += 1
-            }
-
-            return Sensor(
-                dataMap[SensorParameter.HARDWARE.str],
-                dataMap[SensorParameter.IDENTIFIER.str],
-                dataMap[SensorParameter.INDEX.str]?.toInt(),
-                dataMap[SensorParameter.NAME.str],
-                dataMap[SensorParameter.SENSOR_TYPE.str]?.toSensorType(),
-                dataMap[SensorParameter.VALUE.str]?.toDouble(),
-            )
         }
     }
 }
