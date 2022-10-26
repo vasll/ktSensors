@@ -1,8 +1,6 @@
 import WinUtils.Powershell.LIBRE_SCRIPT
+import model.Component
 import model.Sensor
-import java.util.*
-import java.util.function.IntFunction
-
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
@@ -13,8 +11,7 @@ import java.util.function.IntFunction
  */
 class LibreParser {
     /**
-     * Since sensors in the LibreHardwareMonitor library have all the same format we can use an enum class for indexing
-     * each block code that contains sensor data
+     * Enum class for sensor parameters from the LibreHardwareMonitor library
      */
     enum class SensorParameter(val str: String) {
         CONTROL("Control"), HARDWARE("Hardware"),
@@ -27,18 +24,24 @@ class LibreParser {
 
     companion object {
         fun parse() {
-            if(!WinUtils.User.isAdmin())    // Check for Windows admin privileges first
+            if(!WinUtils.User.isAdmin()) {    // Check for Windows admin privileges first
                 println("[WARN] No administrator privileges detected, sensor data will be limited.")
+            }
 
             val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()  // Get the raw output from libreScript.ps1
-
             for(block in rawOutput.split("\n\n")) {
                 if(block.contains("HardwareType")){ // If the current block is a hardware/component block
-
+                    println(getComponent(block))
                 }else{  // If the current block is a sensor block
-                    println(getSensor(block))
+                    println("   ${getSensor(block)}")
                 }
             }
+        }
+
+        private fun getComponent(block: String): Component{
+            val blockMap = blockToMap(block)
+
+            return Component(blockMap["HardwareType"]?.toComponentType(), blockMap["Name"])
         }
 
 
@@ -90,6 +93,14 @@ class LibreParser {
             }
 
             return map
+        }
+
+        private fun String.toComponentType(): Component.Type? {
+            for(type in Component.Type.values())
+                if(type.str == this)
+                    return type
+
+            return null
         }
 
         /**

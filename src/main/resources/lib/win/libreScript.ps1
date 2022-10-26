@@ -12,7 +12,7 @@ $computer.IsCpuEnabled = $true
 $computer.IsGpuEnabled = $true
 $computer.IsMemoryEnabled = $true
 $computer.IsMotherboardEnabled = $true
-$computer.IsControllerEnabled = $true
+$computer.IsControllerEnabled = $false
 $computer.IsNetworkEnabled = $false
 $computer.IsStorageEnabled = $true
 $computer.IsBatteryEnabled = $true
@@ -32,10 +32,9 @@ ForEach ($hardware in $computer.Hardware){
     try{
         $hardware.Update()
     }catch{
-        continue
+        #continue
         #TODO: Here an exception is being ignored be aware
         #Write-Warning $Error[0]
-        #Exit 69420
     }
     
     ForEach ($subHardware in $hardware.SubHardware){

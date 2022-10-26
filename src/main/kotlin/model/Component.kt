@@ -4,16 +4,21 @@ package model
  * Class that represents a hardware component like a motherboard, CPU, GPU, etc...
  */
 //TODO better implementation of this, might have to create CPU object, GPU object etc... since they have unique params
-class Component(
+data class Component(
     val hardwareType: Type?,
     val name: String?
 ) {
     enum class Type(val str: String){
         CPU("Cpu"),
-        GPU("Gpu"),
-        RAM("Memory"),
-        MOBO("Motherboard"),
+        GPU_AMD("GpuAmd"),
+        GPU_INTEL("GpuIntel"),
+        GPU_NVIDIA("GpuNvidia"),
+        GENERIC_MEMORY("Generic Memory"),
+        MEMORY("Memory"),
+        MOTHERBOARD("Motherboard"),
         NETWORK("Network"),
-        STORAGE("Storage") //TODO add battery and test on laptops
+        STORAGE("Storage"),
+        BATTERY("Battery"),
+        SUPER_IO("SuperIO")
     }
 }
