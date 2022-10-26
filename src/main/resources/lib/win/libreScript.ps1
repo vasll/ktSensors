@@ -32,9 +32,10 @@ ForEach ($hardware in $computer.Hardware){
     try{
         $hardware.Update()
     }catch{
-        #continue
-        #TODO: Here an exception is being ignored be aware
+        continue
+        #TODO:Here an exception is being ignored be aware
         #Write-Warning $Error[0]
+        #Exit 69420
     }
     
     ForEach ($subHardware in $hardware.SubHardware){

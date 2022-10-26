@@ -6,7 +6,8 @@ package model
 //TODO better implementation of this, might have to create CPU object, GPU object etc... since they have unique params
 data class Component(
     val hardwareType: Type?,
-    val name: String?
+    val name: String?,
+    val sensors: ArrayList<Sensor>?
 ) {
     enum class Type(val str: String){
         CPU("Cpu"),

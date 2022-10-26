@@ -23,25 +23,38 @@ class LibreParser {
     }
 
     companion object {
-        fun parse() {
+        fun getComponents(): List<Component>{
             if(!WinUtils.User.isAdmin()) {    // Check for Windows admin privileges first
                 println("[WARN] No administrator privileges detected, sensor data will be limited.")
             }
 
-            val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()  // Get the raw output from libreScript.ps1
-            for(block in rawOutput.split("\n\n")) {
+            return parse()
+        }
+
+
+        private fun parse(): List<Component>{
+            val blocks = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim().split("\n\n")  // Get the raw output from libreScript.ps1 and split it into blocks
+
+            val components = arrayListOf<Component>()
+
+            var currentComponent: Component? = null
+            for(block in blocks) {
                 if(block.contains("HardwareType")){ // If the current block is a hardware/component block
-                    println(getComponent(block))
+                    currentComponent = getComponent(block)
+                    components.add(currentComponent)
                 }else{  // If the current block is a sensor block
-                    println("   ${getSensor(block)}")
+                    if (currentComponent != null) {
+                        currentComponent.sensors?.add(getSensor(block))
+                    }
                 }
             }
+            return components
         }
 
         private fun getComponent(block: String): Component{
             val blockMap = blockToMap(block)
 
-            return Component(blockMap["HardwareType"]?.toComponentType(), blockMap["Name"])
+            return Component(blockMap["HardwareType"]?.toComponentType(), blockMap["Name"], arrayListOf())
         }
 
 

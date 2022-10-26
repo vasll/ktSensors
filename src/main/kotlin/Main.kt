@@ -1,7 +1,13 @@
-import WinUtils.Powershell.LIBRE_SCRIPT
+import model.Component
+import model.Sensor
 
 fun main() {
-    LibreParser.parse()
+    val components = LibreParser.getComponents()
 
-    //println(WinUtils.Powershell.runAndGet(LIBRE_SCRIPT))
+    for(component in components){
+        println("${component.name} ${component.hardwareType}")
+        for(sensor in component.sensors!!){
+            println(sensor)
+        }
+    }
 }
