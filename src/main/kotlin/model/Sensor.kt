@@ -21,6 +21,10 @@ data class Sensor(
         CLOCK("Clock"),
         TEMPERATURE("Temperature"),
         CURRENT("Current"),
+        CONTROL("Control"),
+        THROUGHPUT("Throughput"),
+        DATA("Data"),
+        SMALL_DATA("SmallData"),
         FACTOR("Factor");   //TODO add storage sensor types (i.e: "Used Space")
     }
 }

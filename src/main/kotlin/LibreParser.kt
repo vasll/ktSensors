@@ -1,5 +1,8 @@
 import WinUtils.Powershell.LIBRE_SCRIPT
 import model.Sensor
+import java.util.*
+import java.util.function.IntFunction
+
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
@@ -24,14 +27,15 @@ class LibreParser {
 
     companion object {
         fun parse() {
-            val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()
+            if(!WinUtils.User.isAdmin())    // Check for Windows admin privileges first
+                println("[WARN] No administrator privileges detected, sensor data will be limited.")
+
+            val rawOutput = WinUtils.Powershell.runAndGet(LIBRE_SCRIPT).trim()  // Get the raw output from libreScript.ps1
 
             for(block in rawOutput.split("\n\n")) {
                 if(block.contains("HardwareType")){ // If the current block is a hardware/component block
 
                 }else{  // If the current block is a sensor block
-                    //val sensor = getSensor(block)
-                    //println(sensor)
                     println(getSensor(block))
                 }
             }
@@ -44,14 +48,25 @@ class LibreParser {
         private fun getSensor(block: String): Sensor {
             val blockMap = blockToMap(block)
 
+            // Parse the value
+            val value = try{
+                // TODO for some reason double parsing works on my AMD pc (XX.XX) but on my Intel pc double values use a comma (XX,XX)
+                val rawValue = blockMap[SensorParameter.VALUE.str]?.replace(',','.')?.toDouble()
+                if(rawValue!! < 0.0001)  // If the value from the LibreHwMonitor library is < 0.0001 we just floor it
+                    0.00
+                else
+                    rawValue
+            }catch(ex: NumberFormatException){
+                0.00
+            }
+
             return Sensor(
                 blockMap[SensorParameter.HARDWARE.str],
                 blockMap[SensorParameter.IDENTIFIER.str],
                 blockMap[SensorParameter.INDEX.str]?.toInt(),
                 blockMap[SensorParameter.NAME.str],
                 blockMap[SensorParameter.SENSOR_TYPE.str]?.toSensorType(),
-                blockMap[SensorParameter.VALUE.str]?.replace(',','.')?.toDouble(),
-                // TODO for some reason double parsing works on my AMD pc (XX.XX) but on my Intel pc double values use a comma (XX,XX)
+                value,
             )
         }
 
@@ -90,6 +105,7 @@ class LibreParser {
 
         /**
          * Trims all the strings in a List
+         * TODO replace with something better
          */
         private fun List<String>.trimAll(): List<String>{
             val mutableList = this.toMutableList()

@@ -9,13 +9,13 @@
 # Insantiate the computer Object
 $computer = New-Object LibreHardwareMonitor.Hardware.Computer
 $computer.IsCpuEnabled = $true
-$computer.IsGpuEnabled = $false
-$computer.IsMemoryEnabled = $false
-$computer.IsMotherboardEnabled = $false
-$computer.IsControllerEnabled = $false
+$computer.IsGpuEnabled = $true
+$computer.IsMemoryEnabled = $true
+$computer.IsMotherboardEnabled = $true
+$computer.IsControllerEnabled = $true
 $computer.IsNetworkEnabled = $false
-$computer.IsStorageEnabled = $false
-$computer.IsBatteryEnabled = $false
+$computer.IsStorageEnabled = $true
+$computer.IsBatteryEnabled = $true
 
 # Try opening
 try{
@@ -27,8 +27,17 @@ try{
 
 # Print the sensor data
 ForEach ($hardware in $computer.Hardware){
+    
     $hardware
-    $hardware.Update()
+    try{
+        $hardware.Update()
+    }catch{
+        continue
+        #TODO: Here an exception is being ignored be aware
+        #Write-Warning $Error[0]
+        #Exit 69420
+    }
+    
     ForEach ($subHardware in $hardware.SubHardware){
         $subHardware
         ForEach ($sensor in $subHardware.Sensors){
