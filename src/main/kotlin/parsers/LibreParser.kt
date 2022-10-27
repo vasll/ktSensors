@@ -13,18 +13,6 @@ import utils.WinUtils
  * If you want to see the raw output of libreScript.ps1 use: utils.WinUtils.Powershell.runAndGet(LIBRE_SCRIPT)
  */
 class LibreParser {
-    /**
-     * Enum class for sensor parameters from the LibreHardwareMonitor library
-     */
-    enum class SensorParameter(val str: String) {
-        CONTROL("Control"), HARDWARE("Hardware"),
-        IDENTIFIER("Identifier"), INDEX("Index"),
-        IS_DEFAULT_HIDDEN("IsDefaultHidden"), MAX("Max"),
-        MIN("Min"), NAME("Name"), PARAMETERS("Parameters"),
-        SENSOR_TYPE("SensorType"), VALUE("Value"),
-        VALUES("Values"), VALUES_TIME_WINDOW("ValuesTimeWindow")
-    }
-
     companion object {
         fun getComponents(): List<Component>{
             if(!WinUtils.User.isAdmin()) {    // Check for Windows admin privileges first
@@ -72,20 +60,16 @@ class LibreParser {
             // Parse the value
             val value = try{
                 // TODO for some reason double parsing works on my AMD pc (XX.XX) but on my Intel pc double values use a comma (XX,XX)
-                val rawValue = blockMap[SensorParameter.VALUE.str]?.replace(',','.')?.toDouble()
-                if(rawValue!! < 0.0001)  // If the value from the LibreHwMonitor library is < 0.0001 we just floor it
-                    0.00
-                else
-                    rawValue
+                blockMap["Value"]?.replace(',','.')?.toDouble()
             }catch(ex: NumberFormatException){
                 0.00
             }
 
             return Sensor(
-                blockMap[SensorParameter.HARDWARE.str],
-                blockMap[SensorParameter.INDEX.str]?.toInt(),
-                blockMap[SensorParameter.NAME.str],
-                blockMap[SensorParameter.SENSOR_TYPE.str]?.toSensorType(),
+                blockMap["Hardware"],
+                blockMap["Index"]?.toInt(),
+                blockMap["Name"],
+                blockMap["SensorType"]?.toSensorType(),
                 value,
             )
         }
@@ -114,8 +98,11 @@ class LibreParser {
 
         private fun String.toComponentType(): Component.Type? {
             for(type in Component.Type.values())
-                if(type.str == this)
+                if(type.str == this){
                     return type
+                }else if(this.contains("Gpu")) {
+                    return Component.Type.GPU
+                }
 
             return null
         }
