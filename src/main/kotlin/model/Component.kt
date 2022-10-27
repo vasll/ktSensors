@@ -1,9 +1,8 @@
 package model
 
 /**
- * Class that represents a hardware component like a motherboard, CPU, GPU, etc...
+ * A data class that represents a hardware component like a motherboard, CPU, GPU, etc...
  */
-//TODO better implementation of this, might have to create CPU object, GPU object etc... since they have unique params
 data class Component(
     val hardwareType: Type?,
     val name: String?,

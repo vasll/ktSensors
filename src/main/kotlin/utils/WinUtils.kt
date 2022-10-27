@@ -2,9 +2,10 @@ package utils
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-
+/**
+ * Utilities for Windows
+ */
 object WinUtils{
-
     object User{
         fun isAdmin(): Boolean {
             //TODO This is a temporary & not tested solution
@@ -21,7 +22,6 @@ object WinUtils{
             return false
         }
     }
-
 
     object Powershell{
         const val LIBRE_SCRIPT = "src/main/resources/lib/win/libreScript.ps1"    // Path of the .ps1 script that uses the LibreHardwareMonitor library
