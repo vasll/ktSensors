@@ -1,4 +1,4 @@
-
+package utils
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -50,5 +50,6 @@ object WinUtils{
 
             return outputBuffer.toString()
         }
+
     }
 }

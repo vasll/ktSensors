@@ -1,13 +1,16 @@
-import WinUtils.Powershell.LIBRE_SCRIPT
+package parsers
+
+import utils.WinUtils.Powershell.LIBRE_SCRIPT
 import model.Component
 import model.Sensor
+import utils.WinUtils
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
  *
  * Each block of information that is delimited by an empty line is considered a block, and it contains information
  * about either a sensor or a hardware component.
- * If you want to see the raw output of libreScript.ps1 use: WinUtils.Powershell.runAndGet(LIBRE_SCRIPT)
+ * If you want to see the raw output of libreScript.ps1 use: utils.WinUtils.Powershell.runAndGet(LIBRE_SCRIPT)
  */
 class LibreParser {
     /**
@@ -43,23 +46,25 @@ class LibreParser {
                     currentComponent = getComponent(block)
                     components.add(currentComponent)
                 }else{  // If the current block is a sensor block
-                    if (currentComponent != null) {
-                        currentComponent.sensors?.add(getSensor(block))
-                    }
+                    currentComponent?.sensors?.add(getSensor(block))
                 }
             }
             return components
         }
 
+        /**
+         * Attempts to parse a block into a Component
+         * @return a Component
+         */
         private fun getComponent(block: String): Component{
             val blockMap = blockToMap(block)
-
             return Component(blockMap["HardwareType"]?.toComponentType(), blockMap["Name"], arrayListOf())
         }
 
 
         /**
-         * Returns a Sensor from a block of Strings
+         * Attempts to parse a block into a Sensor
+         * @return a Sensor
          */
         private fun getSensor(block: String): Sensor {
             val blockMap = blockToMap(block)
@@ -78,7 +83,6 @@ class LibreParser {
 
             return Sensor(
                 blockMap[SensorParameter.HARDWARE.str],
-                blockMap[SensorParameter.IDENTIFIER.str],
                 blockMap[SensorParameter.INDEX.str]?.toInt(),
                 blockMap[SensorParameter.NAME.str],
                 blockMap[SensorParameter.SENSOR_TYPE.str]?.toSensorType(),

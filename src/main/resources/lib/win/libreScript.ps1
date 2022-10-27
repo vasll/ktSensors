@@ -3,8 +3,8 @@
 # Author: https://github.com/vasll
 
 # Load the DLLs (Make sure that the dll folder is in the same directory as the script)
-[Reflection.Assembly]::LoadFrom($PSScriptRoot+"\\dlls\\LibreHardwareMonitorLib.dll") | Out-Null
-[Reflection.Assembly]::LoadFrom($PSScriptRoot+"\\dlls\\HidSharp.dll") | Out-Null
+[Reflection.Assembly]::LoadFrom($PSScriptRoot+"\dlls\LibreHardwareMonitorLib.dll") | Out-Null
+[Reflection.Assembly]::LoadFrom($PSScriptRoot+"\dlls\HidSharp.dll") | Out-Null
 
 # Insantiate the computer Object
 $computer = New-Object LibreHardwareMonitor.Hardware.Computer
@@ -12,7 +12,7 @@ $computer.IsCpuEnabled = $true
 $computer.IsGpuEnabled = $true
 $computer.IsMemoryEnabled = $true
 $computer.IsMotherboardEnabled = $true
-$computer.IsControllerEnabled = $false
+$computer.IsControllerEnabled = $true
 $computer.IsNetworkEnabled = $false
 $computer.IsStorageEnabled = $true
 $computer.IsBatteryEnabled = $true
@@ -32,10 +32,8 @@ ForEach ($hardware in $computer.Hardware){
     try{
         $hardware.Update()
     }catch{
-        continue
-        #TODO:Here an exception is being ignored be aware
+        #TODO: Here an exception is being ignored be aware
         #Write-Warning $Error[0]
-        #Exit 69420
     }
     
     ForEach ($subHardware in $hardware.SubHardware){

@@ -7,7 +7,7 @@ package model
 data class Component(
     val hardwareType: Type?,
     val name: String?,
-    val sensors: ArrayList<Sensor>?
+    val sensors: ArrayList<Sensor>
 ) {
     enum class Type(val str: String){
         CPU("Cpu"),
