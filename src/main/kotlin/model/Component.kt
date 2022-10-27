@@ -11,9 +11,7 @@ data class Component(
 ) {
     enum class Type(val str: String){
         CPU("Cpu"),
-        GPU_AMD("GpuAmd"),
-        GPU_INTEL("GpuIntel"),
-        GPU_NVIDIA("GpuNvidia"),
+        GPU("Gpu"),
         GENERIC_MEMORY("Generic Memory"),
         MEMORY("Memory"),
         MOTHERBOARD("Motherboard"),

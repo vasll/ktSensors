@@ -8,7 +8,6 @@ package model
  */
 data class Sensor(
     val hardware: String?,
-    val identifier: String?,
     val index: Int?,
     val name: String?,
     val type: Type?,
@@ -25,6 +24,9 @@ data class Sensor(
         THROUGHPUT("Throughput"),
         DATA("Data"),
         SMALL_DATA("SmallData"),
+        TIME_SPAN("TimeSpan"),
+        LEVEL("Level"),
+        ENERGY("Energy"),
         FACTOR("Factor");   //TODO add storage sensor types (i.e: "Used Space")
     }
 }

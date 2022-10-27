@@ -14,8 +14,6 @@ fun main() {
     }
 
 
-
-
 /*
     while(true){
         for(component in LibreParser.getComponents()){
