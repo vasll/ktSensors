@@ -4,7 +4,7 @@ package model
  * A data class that represents a hardware component like a motherboard, CPU, GPU, etc...
  */
 data class Component(
-    val hardwareType: Type?,
+    val type: Type?,
     val name: String?,
     val sensors: ArrayList<Sensor>
 ) {
