@@ -1,5 +1,7 @@
-import model.Component
-import parsers.LibreParser
+package com.vasll
+
+import com.vasll.model.Component
+import com.vasll.parsers.LibreParser
 
 object KTSensors {
     /**

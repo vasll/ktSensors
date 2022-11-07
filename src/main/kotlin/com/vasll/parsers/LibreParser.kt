@@ -1,9 +1,9 @@
-package parsers
+package com.vasll.parsers
 
-import utils.WinUtils.Powershell.LIBRE_SCRIPT
-import model.Component
-import model.Sensor
-import utils.WinUtils
+import com.vasll.utils.WinUtils.Powershell.LIBRE_SCRIPT
+import com.vasll.model.Component
+import com.vasll.model.Sensor
+import com.vasll.utils.WinUtils
 
 /**
  * Parses the output of the LibreHardwareMonitor library into Sensor and Component objects.
@@ -11,7 +11,7 @@ import utils.WinUtils
  *
  * Each block of information that is delimited by an empty line is considered a "block", and it contains information
  * about either a sensor or a hardware component.
- * If you want to see the raw output of libreScript.ps1 use: utils.WinUtils.Powershell.runAndGet(LIBRE_SCRIPT)
+ * If you want to see the raw output of libreScript.ps1 use: com.vasll.WinUtils.Powershell.runAndGet(LIBRE_SCRIPT)
  */
 object LibreParser {
     fun getComponents(): List<Component>{
@@ -43,7 +43,7 @@ object LibreParser {
      * Attempts to parse a block into a Component
      * @return a Component
      */
-    private fun getComponent(block: String): Component{
+    private fun getComponent(block: String): Component {
         val blockMap = blockToMap(block)
         return Component(blockMap["HardwareType"]?.toComponentType(), blockMap["Name"], arrayListOf())
     }

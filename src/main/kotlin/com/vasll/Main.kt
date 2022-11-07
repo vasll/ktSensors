@@ -1,3 +1,5 @@
+package com.vasll
+
 fun main() {
     println("Getting components...")
 
@@ -5,7 +7,7 @@ fun main() {
         println("${component.name} ${component.type}")
 
         for(sensor in component.sensors){
-            println(" $sensor")
+            println(" ${sensor.name} ${sensor.value}")
         }
     }
 }

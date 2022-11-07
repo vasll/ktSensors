@@ -1,4 +1,4 @@
-package model
+package com.vasll.model
 
 /**
  * A data class that represents a hardware component like a motherboard, CPU, GPU, etc...

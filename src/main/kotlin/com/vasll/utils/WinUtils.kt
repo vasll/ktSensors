@@ -1,4 +1,4 @@
-package utils
+package com.vasll.utils
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

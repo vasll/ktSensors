@@ -1,4 +1,4 @@
-package model
+package com.vasll.model
 
 /**
  * A data class that represents a sensor
