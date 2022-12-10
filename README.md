@@ -1,7 +1,7 @@
 # ktSensors
 Get sensor data from your Windows computer using Java/Kotlin<br>
 
-This library works simply by wrapping the [librehardwaremonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) library via a powershell script into kotlin code and parsing the output into kotlin objects (Component, Sensor)
+This library works by wrapping the [librehardwaremonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) library via a powershell script into kotlin objects (Component, Sensor)
 
 _Only works on Windows, there is no Linux or macOS implementation yet_<br>
 
