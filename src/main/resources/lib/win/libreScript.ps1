@@ -4,7 +4,7 @@
 
 . $PSScriptRoot\UpdateVisitor.ps1
 
-# Insantiate the computer Object
+# Instantiate the computer Object
 $computer = New-Object LibreHardwareMonitor.Hardware.Computer
 $computer.IsCpuEnabled = $true
 $computer.IsGpuEnabled = $true
@@ -30,28 +30,29 @@ try{
 
 # Print the sensor data
 while($true){
-    "|SENSOR_STREAM_START|"
+    "|STREAM_START|"
     ForEach ($hardware in $computer.Hardware){
-        "|BLOCK_START|"
-        $hardware
-        "|BLOCK_END|"
+        "|HARDWARE_BLOCK_START|"
+        "$($hardware|Out-String)".Trim()
+        "|HARDWARE_BLOCK_END|"
         ForEach ($subHardware in $hardware.SubHardware){
-            "|BLOCK_START|"
-            $subHardware
-            "|BLOCK_END|"
+            "|HARDWARE_BLOCK_START|"
+            "$($subHardware|Out-String)".Trim()
+            "|HARDWARE_BLOCK_END|"
             ForEach ($sensor in $subHardware.Sensors){
-                "|BLOCK_START|"
-                $sensor
-                "|BLOCK_END|"
+                "|SENSOR_BLOCK_START|"
+                "$($sensor|Out-String)".Trim()
+                "|SENSOR_BLOCK_END|"
             }
         }
         ForEach ($sensor in $hardware.Sensors){
-            "|BLOCK_START|"
-            $sensor
-            "|BLOCK_END|"
+            "|SENSOR_BLOCK_START|"
+            "$($sensor|Out-String)".Trim()
+            "|SENSOR_BLOCK_END|"
         }
     }
-    "|SENSOR_STREAM_END|"
+    "|STREAM_END|"
+    Start-Sleep -s 1    #TODO make this changeable
 }
 
 $computer.Reset()

@@ -1,0 +1,10 @@
+---TODO---
+1. Get the text stream from the powershell script
+2. Read the stream from the powershell script in real time
+3. Parse the stream from the powershell script into Component and Sensor
+4. Make a custom streamListener that gets toggled each time the sensor stream ends and restarts
+
+---OPTIONAL---
+- Read from stderr and see if there are any errors
+- Implement subhardware instead of treating it as hardware
+- Make update rate changeable in powershell script (pass it as param each time it's changed)

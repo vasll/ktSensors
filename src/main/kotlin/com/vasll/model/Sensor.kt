@@ -5,13 +5,17 @@ package com.vasll.model
  */
 data class Sensor(
     val hardware: String?,
+    val identifier: String?,
     val index: Int?,
+    val max: Double?,
+    val min: Double?,
     val name: String?,
     val type: Type?,
     val value: Double?
 ) {
     enum class Type(val str: String){
         LOAD("Load"),
+        FAN("Fan"),
         VOLTAGE("Voltage"),
         POWER("Power"),
         CLOCK("Clock"),
