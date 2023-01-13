@@ -7,17 +7,17 @@ import java.io.InputStreamReader
 
 class LibreStream {
     private val streamListeners = mutableListOf<StreamListener>()
-    private var isStreamCloseRequested = false
+    private lateinit var streamThread: LibreStreamThread
 
     fun addStreamListener(streamListener: StreamListener) {
         streamListeners.add(streamListener)
     }
 
-    /**
-     * Starts a stream from the libreScript.ps1 file that will fetch Sensor and Component objects
-     */
-    fun startStream() {
-        Thread{
+    private inner class LibreStreamThread: Thread() {
+        @Volatile
+        var isCloseStreamRequested = false
+
+        override fun run(){
             val scriptProcess = Runtime.getRuntime().exec(arrayOf("Powershell", "src/main/resources/lib/win/libreScript.ps1"))
             val stdInput = BufferedReader(InputStreamReader(scriptProcess.inputStream)) //TODO add stdErr check
             var s: String
@@ -26,8 +26,9 @@ class LibreStream {
             var currentComponent : Component? = null
 
             while (stdInput.readLine().also { s = it } != null) {
-                if (isStreamCloseRequested)
-                    return@Thread
+                if(isCloseStreamRequested){
+                    return
+                }
 
                 if(s.contains("|STREAM_START|")){
                     continue
@@ -61,10 +62,23 @@ class LibreStream {
                 }
                 currentBlock.append("$s\n")
             }
-        }.start()
+        }
     }
 
-    fun requestStreamClose() {
-        isStreamCloseRequested = true
+    /**
+     * Starts a Thread with a stream from the libreScript.ps1 file that will fetch Sensor and Component objects
+     */
+    fun startStream() {
+        streamThread = LibreStreamThread()
+        streamThread.start()
     }
+
+    /**
+     * Requests a Thread.interrupt() on the Thread on which the stream is running on
+     */
+    fun closeStream(){
+        streamThread.isCloseStreamRequested = true
+    }
+
+
 }

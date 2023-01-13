@@ -13,7 +13,7 @@ fun main() {
     try {
         Thread.sleep(5000)
     } catch (ignored: Exception) {}
-    libreStream.requestStreamClose()
+    libreStream.closeStream()
     println("Stopped calculation stream")
 }
 
