@@ -46,7 +46,6 @@ class LibreStream {
 
                 if(s.contains("|HARDWARE_BLOCK_END|")){ // Finished reading Component block, add it to the list
                     currentComponent = LibreParser.parseComponent(currentBlock.toString().trim())
-                    println(currentComponent)    //TODO REMOVE
                     components.add(currentComponent)
                     currentBlock.clear()
                     continue
@@ -56,7 +55,6 @@ class LibreStream {
                     currentComponent?.sensors?.add(
                         LibreParser.parseSensor(currentBlock.toString().trim())
                     )
-                    println(LibreParser.parseSensor(currentBlock.toString().trim()))    //TODO REMOVE
                     currentBlock.clear()
                     continue
                 }
