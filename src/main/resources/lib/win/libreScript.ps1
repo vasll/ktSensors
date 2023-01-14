@@ -1,8 +1,13 @@
+# Load the parameters (if any)
+param(
+    [float]$delaySeconds=1
+)
+
 # Load DLLs
 [Reflection.Assembly]::LoadFrom($PSScriptRoot+"\dlls\LibreHardwareMonitorLib.dll") | Out-Null
 [Reflection.Assembly]::LoadFrom($PSScriptRoot+"\dlls\HidSharp.dll") | Out-Null
-
 . $PSScriptRoot\UpdateVisitor.ps1
+
 
 # Instantiate the computer Object
 $computer = New-Object LibreHardwareMonitor.Hardware.Computer
@@ -52,7 +57,7 @@ while($true){
         }
     }
     "|STREAM_END|"
-    Start-Sleep -s 1    #TODO make this changeable
+    Start-Sleep -s $delaySeconds    #TODO make this changeable
 }
 
 $computer.Reset()
