@@ -1,5 +1,6 @@
 package com.vasll
 
+import com.vasll.listeners.StreamStartListener
 import com.vasll.listeners.StreamUpdateListener
 import com.vasll.model.Component
 import com.vasll.parsers.LibreParser
@@ -8,11 +9,8 @@ import java.io.InputStreamReader
 
 class LibreStream {
     private val streamUpdateListeners = mutableListOf<StreamUpdateListener>()
+    private val streamStartListeners = mutableListOf<StreamStartListener>()
     private lateinit var streamThread: LibreStreamThread
-
-    fun addStreamUpdateListener(streamUpdateListener: StreamUpdateListener) {
-        streamUpdateListeners.add(streamUpdateListener)
-    }
 
     private inner class LibreStreamThread: Thread() {
         @Volatile
@@ -32,12 +30,18 @@ class LibreStream {
                 }
 
                 if(s.contains("|STREAM_START|")){
+                    // Notify streamStartListeners
+                    for (listener in streamStartListeners) {
+                        listener.onStreamStart()
+                    }
                     continue
                 }
 
-                if(s.contains("|STREAM_END|")){ // Notify listener
-                    for (listener in streamUpdateListeners)
+                if(s.contains("|STREAM_END|")){
+                    // Notify streamUpdateListeners
+                    for (listener in streamUpdateListeners) {
                         listener.onStreamUpdate(components)
+                    }
                     continue
                 }
 
@@ -75,5 +79,13 @@ class LibreStream {
         streamThread.isCloseStreamRequested = true
     }
 
+    // LISTENERS
+    fun addStreamUpdateListener(streamUpdateListener: StreamUpdateListener) {
+        streamUpdateListeners.add(streamUpdateListener)
+    }
+
+    fun addStreamStartListener(streamStartListener: StreamStartListener) {
+        streamStartListeners.add(streamStartListener)
+    }
 
 }
