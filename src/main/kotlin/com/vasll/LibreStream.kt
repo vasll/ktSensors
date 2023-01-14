@@ -36,7 +36,7 @@ class LibreStream {
 
                 if(s.contains("|STREAM_END|")){ // Notify listener
                     for (listener in streamListeners)
-                        listener.onStreamUpdate(arrayListOf<Component>())
+                        listener.onStreamUpdate(components)
                     continue
                 }
 
@@ -63,18 +63,14 @@ class LibreStream {
         }
     }
 
-    /**
-     * Starts a Thread with a stream from the libreScript.ps1 file that will fetch Sensor and Component objects
-     */
+    /** Starts a Thread with a stream from the libreScript.ps1 file that will fetch Sensor and Component objects */
     fun startStream() {
         streamThread = LibreStreamThread()
         streamThread.start()
     }
 
-    /**
-     * Requests a Thread.interrupt() on the Thread on which the stream is running on
-     */
-    fun closeStream(){
+    /** Requests a stream close */
+    fun requestStreamClose(){
         streamThread.isCloseStreamRequested = true
     }
 
