@@ -4,7 +4,7 @@
 1. Get the text stream from the powershell script
 2. Read the stream from the powershell script in real time
 3. Parse the stream from the powershell script into Component and Sensor
-4. Make a custom streamListener that gets toggled each time the sensor stream ends and restarts
+4. Make a custom streamUpdateListener that gets toggled each time the sensor stream ends and restarts
 
 # TODO
 <br>Fundamental

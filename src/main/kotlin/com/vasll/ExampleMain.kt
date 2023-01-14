@@ -4,7 +4,7 @@ package com.vasll
 fun main(){
     val libreStream = LibreStream()
 
-    libreStream.addStreamListener {
+    libreStream.addStreamUpdateListener {
         for(component in it){
             println("${component.name} ${component.type}")
             for(sensor in component.sensors){
