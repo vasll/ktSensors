@@ -8,10 +8,10 @@
 
 # TODO
 <br>Fundamental
-
 - [ ] Implement subhardware elements
 <br>_Right now every subhardware object from the hardwaremonitorlib is treated simply as a hardware Component object_
 - [ ] Add linux support
+- [ ] On app exit close all the running scripts in the background 
 
 <br>Optional
 - [x] Make sensor stream update rate changeable

@@ -1,8 +1,5 @@
 package com.vasll
 
-import java.lang.Exception
-import java.lang.Thread.sleep
-
 // Example of LibreStream usage
 fun main(){
     val libreStream = LibreStream(1.0)
