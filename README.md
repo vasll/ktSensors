@@ -11,10 +11,8 @@
 
 - [ ] Implement subhardware elements
 <br>_Right now every subhardware object from the hardwaremonitorlib is treated simply as a hardware Component object_
-
-
-<br>Optional
 - [ ] Add linux support
 
-- [ ] Make sensor stream update rate changeable
-<br>_Right now in the libreScript.ps1 script the update rate is at 1s and is not changeable. To change the update rate make a setUpdateRate(var seconds) method that stops the Powershell script, passes it the update rate in seconds as a parameter and restarts the stream._
+<br>Optional
+- [x] Make sensor stream update rate changeable
+- [ ] Fix on app close Powershell script still running

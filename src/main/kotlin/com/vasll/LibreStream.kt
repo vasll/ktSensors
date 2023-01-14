@@ -7,12 +7,14 @@ import com.vasll.parsers.LibreParser
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class LibreStream {
+/**
+ * @param updateRate The rate at which the data is updated in SECONDS. Update rate below 0.25s is discouraged
+ */
+class LibreStream(private var updateRate: Double = 1.00) {
     private val streamUpdateListeners = mutableListOf<StreamUpdateListener>()
     private val streamStartListeners = mutableListOf<StreamStartListener>()
     private lateinit var streamThread: LibreStreamThread
     private val libreScriptPath = "src/main/resources/lib/win/libreScript.ps1"
-
 
     // STREAM HANDLING
     /** Starts a Thread with a stream from the libreScript.ps1 file that will fetch Sensor and Component objects */
@@ -26,6 +28,14 @@ class LibreStream {
         streamThread.isCloseStreamRequested = true
     }
 
+    /** Restarts the script and gives it a new update rate */
+    fun setUpdateRate(updateRate: Double){
+        this.updateRate = updateRate
+        if(streamThread.isAlive){   // If stream is open, close it and start it again
+            this.requestStreamClose()
+            this.startStream()
+        }
+    }
 
     // LIBRE STREAM THREAD
     /**
@@ -37,7 +47,9 @@ class LibreStream {
         var isCloseStreamRequested = false
 
         override fun run(){
-            val scriptProcess = Runtime.getRuntime().exec(arrayOf("Powershell", libreScriptPath))
+            val scriptProcess = Runtime.getRuntime().exec(
+                arrayOf("Powershell", libreScriptPath, "-delaySeconds $updateRate")
+            )
             val stdInput = BufferedReader(InputStreamReader(scriptProcess.inputStream)) //TODO add stdErr check
             var s: String
             val currentBlock = StringBuilder()
