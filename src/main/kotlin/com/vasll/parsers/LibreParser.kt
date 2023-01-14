@@ -5,8 +5,13 @@ import com.vasll.model.Sensor
 import java.util.stream.Collectors
 
 
+/**
+ * Contains functions for parsing the data stream coming from the libreScript.ps1 Powershell script into Component and
+ * Sensor objects.
+ */
 object LibreParser {
 
+    /** Parses a Component from the LHM library */
     fun parseComponent(textBlock: String): Component{
         val textBlockMap = textBlockToMap(textBlock)
         return Component(
@@ -16,6 +21,7 @@ object LibreParser {
         )
     }
 
+    /** Parses a Sensor from the LHM library */
     fun parseSensor(textBlock: String): Sensor {
         val textBlockMap = textBlockToMap(textBlock)
 
@@ -31,6 +37,11 @@ object LibreParser {
         )
     }
 
+    /**
+     * Parses a block of data from the libreScript.ps1 script into a MutableMap that has the key as the first parameter
+     * and the value as the second parameter. In the script a block starts when "|..._BLOCK_START|" is printed in stdout
+     * and ends when "|..._BLOCK_END|" is printed in stdout
+     * */
     private fun textBlockToMap(textBlock: String): MutableMap<String, String> {
         val mutableMap = mutableMapOf<String, String>()
 
@@ -55,8 +66,12 @@ object LibreParser {
 
 
     // EXTRA FUNCTIONS
+    /** Attempts to parse a String into a Double
+     * @return null if NumberFormatException is raised, else the parsed Double
+     */
     private fun String.tryParseDouble(): Double? {
         return try{
+            // String->Double parsing with commas doesn't work, commas are replaced with dots
             this.replace(',','.').toDouble()
         }catch(ex: NumberFormatException){
             ex.printStackTrace()
@@ -64,6 +79,9 @@ object LibreParser {
         }
     }
 
+    /** Parses a String coming from the "Type" field in the libreParser.ps1 script into a model.Sensor.Type enum
+     * @return null if parsing failed, else the parsed Sensor.Type
+     */
     private fun String.toSensorType(): Sensor.Type? {
         for(type in Sensor.Type.values())
             if(type.str == this)
@@ -72,15 +90,17 @@ object LibreParser {
         return null
     }
 
+    /** Parses a String coming from the "Type" field in the libreParser.ps1 script into a model.Component.Type enum
+     * @return null if parsing failed, else the parsed Component.Type
+     */
     private fun String.toComponentType(): Component.Type? {
         for(type in Component.Type.values())
-            if(type.str == this){
+            if (type.str == this)
                 return type
-            }else if(this.contains("Gpu")) {
-                /*  GPUS are not called "GPU" but "GpuAmd", "GpuNvidia" etc..., I decided for simplicity to just
-                parse them all as a GPU  */
+            else if (this.contains("Gpu"))
                 return Component.Type.GPU
-            }
+        /* GPU components coming from the libreParser.ps1 script have a value of "GpuAmd", "GpuNvidia"... in the "Type"
+        * field. For simplicity, I decided to just parse them all as a Component.Type.GPU enum */
 
         return null
     }
