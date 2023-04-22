@@ -22,13 +22,3 @@ fun main(){
     libreStream.startStream()
 }
 ```
-
-# TODO
-**Fundamental**
-- [ ] Implement subhardware elements - _Right now every subhardware object from the hardwaremonitorlib is treated simply as a hardware Component object_
-- [ ] Add linux support
-- [ ] On app exit close all the running scripts in the background 
-
-**Optional**
-- [x] Make sensor stream update rate changeable
-- [ ] Fix on app close Powershell script still running
